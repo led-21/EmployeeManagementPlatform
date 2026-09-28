@@ -4,10 +4,10 @@
 
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-EF%20Core-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Tests](https://img.shields.io/badge/Tests-36%20Passed-10B981)](#tests)
+[![CI](https://github.com/led-21/EmployeeManagementPlatform/actions/workflows/ci.yml/badge.svg)](https://github.com/led-21/EmployeeManagementPlatform/actions/workflows/ci.yml)
 
 ---
 
@@ -138,7 +138,7 @@ All endpoints are prefixed under `/api/employees`.
 ### Prerequisites
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or higher
-- [Node.js](https://nodejs.org/) (v18+ recommended) & npm
+- [Node.js](https://nodejs.org/) (v22 LTS recommended) & npm
 
 ### 1. Clone the repository
 
@@ -206,6 +206,12 @@ npm run test
 
 ```text
 EmployeeManagementPlatform/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                          # GitHub Actions CI workflow
+├── .nvmrc                                  # Node.js LTS version specification
+├── LICENSE                                 # MIT License
+├── README.md                               # Project documentation
 ├── EmployeeManagementPlatform.sln          # .NET Solution file
 ├── EmployeeManagementPlatform.Api/         # Backend ASP.NET Core 8 Web API
 │   ├── Data/
@@ -235,6 +241,7 @@ EmployeeManagementPlatform/
 │   └── EmployeeValidationTests.cs          # Validation unit tests
 │
 └── frontend/                               # Frontend (React + TypeScript + Vite)
+    ├── .nvmrc                              # Node version specification
     ├── public/                             # Static assets
     ├── src/
     │   ├── components/                     # Reusable UI components
@@ -297,4 +304,4 @@ Future enhancement possibilities:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
