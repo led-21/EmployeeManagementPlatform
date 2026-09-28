@@ -1,40 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
+namespace EmployeeManagementPlatform.Api.Models;
 
 public class Employee
 {
-    [Key]
     public int Id { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Position { get; set; } = string.Empty;
+    public string Department { get; set; } = string.Empty;
+    public decimal Salary { get; set; }
+    public DateTime HireDate { get; set; }
+    public bool Active { get; set; } = true;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
 
-    [Required]
-    [StringLength(50)]
-    public string FirstName { get; set; }
-
-    [Required]
-    [StringLength(50)]
-    public string LastName { get; set; }
-
-    [Required]
-    public DateTime Birthdate { get; set; }
-
-    [Required]
-    public DateTime EmploymentDate { get; set; }
-
-    [ForeignKey("Boss")]
-    [AllowNull]
-    public int? BossId { get; set; }
-    public Employee? Boss { get; set; }
-
-    [Required]
-    public string HomeAddress { get; set; }
-
-    [Required]
-    public decimal CurrentSalary { get; set; }
-
-    [Required]
-    public string Role { get; set; }
-
+    public string FullName => $"{FirstName} {LastName}".Trim();
 }
-
-

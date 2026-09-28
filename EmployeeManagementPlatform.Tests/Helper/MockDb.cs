@@ -1,15 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using EmployeeManagementPlatform.Api.Data;
 
 namespace EmployeeManagementPlatform.Tests.Helpers;
 
-public class MockDb : IDbContextFactory<EmployeeDatabase>
+public static class TestDbContextFactory
 {
-    public EmployeeDatabase CreateDbContext()
+    public static AppDbContext Create(string? dbName = null)
     {
-        var options = new DbContextOptionsBuilder<EmployeeDatabase>()
-            .UseInMemoryDatabase($"InMemoryTestDb-{DateTime.Now.ToFileTimeUtc()}")
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase(dbName ?? $"TestDb-{Guid.NewGuid()}")
             .Options;
 
-        return new EmployeeDatabase(options);
+        var context = new AppDbContext(options);
+        context.Database.EnsureCreated();
+        return context;
     }
 }
