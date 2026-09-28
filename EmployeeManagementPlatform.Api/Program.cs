@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using visma_aspnetcore_task.Interfaces;
-using visma_aspnetcore_task.Services;
+using EmployeeManagementPlatform.Api.Endpoints;
+using EmployeeManagementPlatform.Api.Interfaces;
+using EmployeeManagementPlatform.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,6 @@
-﻿using visma_aspnetcore_task.Interfaces;
+using EmployeeManagementPlatform.Api.Interfaces;
+
+namespace EmployeeManagementPlatform.Api.Endpoints;
 
 public static class EmployeesEndpoints
 {

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using visma_aspnetcore_task.Interfaces;
+using EmployeeManagementPlatform.Api.Interfaces;
 
-namespace visma_aspnetcore_task.Services;
+namespace EmployeeManagementPlatform.Api.Services;
 
 public class EmployeeServices(EmployeeDatabase database, IMemoryCache cache) : IEmployeeServices
 {

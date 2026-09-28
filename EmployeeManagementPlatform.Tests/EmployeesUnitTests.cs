@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using UnitTests.Helpers;
-using visma_aspnetcore_task.Services;
+using EmployeeManagementPlatform.Tests.Helpers;
+using EmployeeManagementPlatform.Api.Services;
+using EmployeeManagementPlatform.Api.Endpoints;
 using Xunit.Abstractions;
 
-namespace UnitTests
+namespace EmployeeManagementPlatform.Tests
 {
     public class EmployeesUnitTests
     {

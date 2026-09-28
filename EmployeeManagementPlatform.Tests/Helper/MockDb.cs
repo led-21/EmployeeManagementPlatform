@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace UnitTests.Helpers;
+namespace EmployeeManagementPlatform.Tests.Helpers;
 
 public class MockDb : IDbContextFactory<EmployeeDatabase>
 {

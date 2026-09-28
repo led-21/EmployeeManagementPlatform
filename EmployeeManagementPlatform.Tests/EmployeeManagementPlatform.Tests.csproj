@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <RootNamespace>EmployeeManagementPlatform.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\visma-aspnetcore-task\visma-aspnetcore-task.csproj" />
+    <ProjectReference Include="..\EmployeeManagementPlatform.Api\EmployeeManagementPlatform.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

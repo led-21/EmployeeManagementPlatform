@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace visma_aspnetcore_task.Migrations
+namespace EmployeeManagementPlatform.Api.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -1,4 +1,4 @@
-﻿namespace visma_aspnetcore_task.Interfaces;
+namespace EmployeeManagementPlatform.Api.Interfaces;
 
 public interface IEmployeeServices
 {
