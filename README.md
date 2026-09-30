@@ -1,166 +1,128 @@
 # Employee Management Platform
 
-> A lightweight full-stack employee management application built with ASP.NET Core, React and TypeScript.
+> A full-stack employee management platform built with ASP.NET Core 8, React 19, and TypeScript, featuring server-side querying, dual-layer validation, automated test suites, and CI.
 
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![SQLite](https://img.shields.io/badge/SQLite-EF%20Core-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript 6](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite 8](https://img.shields.io/badge/Vite-8.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tests](https://img.shields.io/badge/Tests-xUnit%20%7C%20Vitest-2ea44f)](EmployeeManagementPlatform.Tests/)
 [![CI](https://github.com/led-21/EmployeeManagementPlatform/actions/workflows/ci.yml/badge.svg)](https://github.com/led-21/EmployeeManagementPlatform/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
----
+![Employee Management Platform](docs/images/dashboard.png)
 
 ## Overview
 
-**Employee Management Platform** is a modern, modular full-stack application designed to manage organizational workforce data effectively. Originally evolved from a simple backend technical exercise, the project was restructured into a production-grade portfolio application showcasing best practices in:
+**Employee Management Platform** is a full-stack web application that pairs an **ASP.NET Core 8 Minimal API** backend with a **React 19 + TypeScript** single-page frontend. It provides a complete workforce directory with real-time KPI metrics, full CRUD lifecycle operations, and server-side search, department/status filtering, multi-column sorting, and pagination backed by **Entity Framework Core 8** and **SQLite**.
 
-- **API Design**: Standardized REST Minimal APIs with OpenAPI / Swagger documentation and RFC 7807/9457 `ValidationProblemDetails`.
-- **Clean Architecture & Separation of Concerns**: Decoupled domain models, application services with EF Core `IQueryable` server-side paging, and typed DTOs.
-- **Robust Validation**: Dual-layer validation with **FluentValidation** on the backend and reactive, accessible UX feedback on the frontend.
-- **Modern Frontend Architecture**: React 19 with TypeScript, Vite, custom responsive design system, debounced search, sortable tables, and modal workflows.
-- **Automated Testing**: 100% passing test coverage across backend services, validations, and React component workflows.
+The codebase emphasizes clean separation between API endpoints, application services, domain models, and typed frontend integration. Input rules and email uniqueness are enforced through **FluentValidation** with standardized `ProblemDetails` error responses, verified by automated backend (**xUnit**) and frontend (**Vitest**) test suites running in **GitHub Actions CI**.
 
----
+## Highlights
 
-## Features
+- **REST API with ASP.NET Core 8 Minimal APIs** — Typed route groups, OpenAPI metadata, and standardized status codes.
+- **Server-Side Search, Filtering, Sorting & Pagination** — Composable EF Core `IQueryable` pipelines executed directly in SQL.
+- **React 19 + TypeScript 6 Frontend** — Responsive dashboard with KPI summary cards, sortable table, and modal workflows.
+- **FluentValidation & RFC 7807 Error Contracts** — Backend domain rules and conflict checks mapped to `ValidationProblemDetails`.
+- **EF Core 8 + SQLite Persistence** — Indexed schema (`Email`, `Department`, `Active`) with automatic migration and synthetic seed data on startup.
+- **Automated Backend & Frontend Test Suites** — 23 xUnit backend tests and 13 Vitest + React Testing Library frontend tests.
+- **GitHub Actions CI** — Automated build, type-checking, and test execution on push and pull requests.
 
-- **Workforce KPI Cards**: Instant summary metrics displaying total employees, active count, inactive count, and department breakdown.
-- **Search & Filtering**: Real-time debounced search by name, position, or corporate email, combined with department and active/inactive status filters.
-- **Sortable & Paginated Table**: Server-side pagination with customizable page sizes (5, 10, 20, 50) and multi-column sorting (Name, Department, Position, Salary, Hire Date).
-- **Employee CRUD Operations**:
-  - **Create**: Add new employees with client and server validation.
-  - **Details**: Modal inspection displaying compensation, contact info, formatted dates, and calculated company tenure.
-  - **Edit**: Update employee attributes with duplicate email protection and status control.
-  - **Toggle Status**: Quick activation/deactivation of employees.
-  - **Delete**: Permanent removal with accessible confirmation dialog.
-- **Developer Experience**: Automatic database creation and synthetic data seeding on startup, Swagger UI, and zero-config local development proxy.
+## Application Preview
 
----
+### Workforce Dashboard
+
+The main view presents live organizational KPIs, debounced text search, department and status filters, sortable directory columns, and server-side pagination controls.
+
+![Workforce dashboard](docs/images/dashboard.png)
+
+| Employee Form | Employee Details |
+| --- | --- |
+| ![Employee Form](docs/images/employee-form.png) | ![Employee Details](docs/images/employee-details.png) |
+
+| Interactive OpenAPI / Swagger UI |
+| --- |
+| ![Swagger UI](docs/images/swagger.png) |
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    subgraph Client ["Client Tier (Frontend)"]
-        UI["React 19 + TypeScript UI\n(Components & Modals)"]
-        APIClient["Typed API Client\n(src/services/api.ts & employees.ts)"]
-        UI --> APIClient
-    end
+    UI["React 19 + TypeScript\n(Vite Frontend)"]
+    API["ASP.NET Core 8 Minimal API\n(Endpoints & FluentValidation)"]
+    SVC["Application Services\n(IEmployeeService / EmployeeService)"]
+    EF["Entity Framework Core 8\n(AppDbContext)"]
+    DB[("SQLite\n(Migrations & Seed Data)")]
 
-    subgraph Server ["Server Tier (ASP.NET Core API)"]
-        Endpoints["REST Minimal API Endpoints\n(/api/employees)"]
-        Validator["FluentValidation Layer\n(Create & Update Validators)"]
-        ServiceLayer["Application Services\n(IEmployeeService / EmployeeService)"]
-        
-        Endpoints --> Validator
-        Endpoints --> ServiceLayer
-    end
-
-    subgraph DataTier ["Data Tier (Persistence)"]
-        EF["Entity Framework Core 8\n(AppDbContext)"]
-        SQLite[("SQLite Database\n(Synthetic Seed & Migrations)")]
-        
-        ServiceLayer --> EF
-        EF --> SQLite
-    end
-
-    APIClient -->|HTTP / JSON via CORS| Endpoints
+    UI -->|"REST / JSON"| API
+    API --> SVC
+    SVC --> EF
+    EF --> DB
 ```
 
----
+Request validation is handled at the API boundary with **FluentValidation** before delegating to `EmployeeService`. Quality and build integrity across both tiers are verified with **xUnit**, **Vitest**, and **GitHub Actions CI**.
 
-## Backend
+## Tech Stack
 
-The backend is built with **C#** and **ASP.NET Core 8.0 Minimal APIs**, leveraging modern .NET idioms:
+| Layer | Technology |
+| --- | --- |
+| Backend | ASP.NET Core 8 (`.NET 8.0`, Minimal APIs, Swashbuckle OpenAPI) |
+| Data | Entity Framework Core 8 (`8.0.4`) + SQLite |
+| Validation | FluentValidation (`12.1.1`) |
+| Frontend | React `19.3` + TypeScript `6.0` |
+| Build | Vite `8.3` |
+| Backend Tests | xUnit (`2.5.3`) + EF Core InMemory (`8.0.4`) |
+| Frontend Tests | Vitest (`5.0.2`) + React Testing Library (`16.3.3`) |
+| CI | GitHub Actions |
 
-- **Entity Framework Core 8**: Configured with SQLite, relational model constraints, indexes on frequently queried fields (`Email`, `Department`, `Active`), and synthetic seed data.
-- **Query Optimization**: Queries utilize `IQueryable` composition with `.AsNoTracking()`, server-side `.Where()`, dynamic ordering, and `.Skip()`/`.Take()` pagination directly executed in SQL.
-- **FluentValidation**: Strongly-typed business validation ensuring:
-  - Required fields and character length restrictions.
-  - Valid corporate email format and unique email enforcement.
-  - Different first and last names.
-  - Non-negative salary and valid hire dates (not in the future, post-1990).
-- **Standardized Error Handling**: RFC 7807 / RFC 9110 `ValidationProblemDetails` returned for all validation failures and conflicts.
-- **CORS**: Configured for local Vite development environments (`http://localhost:5173`, `http://localhost:3000`).
+## Key Engineering Details
 
----
-
-## Frontend
-
-The frontend is built with **React**, **TypeScript**, and **Vite**:
-
-- **Component Hierarchy**:
-  - `Header`: Navigation, branding, and trigger for employee creation.
-  - `SummaryCards`: High-level metrics with skeleton loading states.
-  - `SearchInput`: Debounced search input with instant clear action.
-  - `EmployeeTable`: Responsive table with avatar initials, formatted currency, sort indicators, and action triggers.
-  - `StatusBadge`: Clean status pill (Active / Inactive).
-  - `Pagination`: Accessible page navigation and page size selector.
-  - `EmployeeForm` & `EmployeeFormModal`: Unified form with dual client-side validation hints and server error banner integration.
-  - `EmployeeDetailsModal`: Detailed inspection modal with seniority calculation.
-  - `ConfirmModal`: Confirmation dialog for destructive actions.
-  - `Toast`: Auto-dismissing feedback messages for user actions.
-- **Typed Integration**: Centralized API service with strict TypeScript contracts, preventing model divergence.
-- **Styling**: Tailored CSS system with CSS custom properties, responsive breakpoints, subtle elevations, and clean typography.
-
----
+- **Server-Side `IQueryable` Composition**: `EmployeeService.GetAllAsync` composes search (`EF.Functions.Like` across first name, last name, email, and position), department and active status filters, and `CountAsync` before materializing results.
+- **`AsNoTracking` Read Queries**: Directory listings and detail lookups use `.AsNoTracking()` to avoid change-tracker overhead on read-only operations.
+- **Dynamic Multi-Column Sorting & `Skip`/`Take` Pagination**: Supports ascending/descending sorting across `name`, `department`, `position`, `salary`, `hiredate`, and `createdat` with bounded page sizes (`1..100`).
+- **Unique Email Enforcement**: Enforced both via a unique database index (`IX_Employees_Email`) and normalized service-level conflict checks (`409 Conflict` via `ProblemDetails`).
+- **Standardized `ProblemDetails` Error Handling**: Validation failures return `400 Bad Request` with field-level `ValidationProblemDetails` dictionaries; missing resources and duplicate emails return structured `404` and `409` responses.
+- **Typed Frontend API Client**: `src/services/api.ts` and `src/services/employees.ts` wrap `fetch` with strict TypeScript DTOs and parse `ProblemDetails` payloads into a custom `ApiError` class.
+- **Debounced Search & Shared Validation Behavior**: Search input is debounced (`300ms`) to minimize API traffic, while `EmployeeForm` pairs immediate client-side validation rules with server-side field error rendering.
+- **Zero-Config Synthetic Seeding**: On startup, `Program.cs` applies EF Core migrations automatically and seeds 12 synthetic employee records across 7 departments.
 
 ## API
 
-All endpoints are prefixed under `/api/employees`.
+All endpoints are grouped under `/api/employees`:
 
-| Method | Endpoint | Description | Response Status |
-|---|---|---|---|
-| `GET` | `/api/employees` | Get paginated employees with search, filters, and sorting | `200 OK` |
-| `GET` | `/api/employees/summary` | Get workforce KPI metrics and department counts | `200 OK` |
-| `GET` | `/api/employees/departments` | Get distinct list of department names | `200 OK` |
-| `GET` | `/api/employees/{id}` | Get employee details by ID | `200 OK`, `404 Not Found` |
+| Method | Endpoint | Summary | Status Codes |
+| --- | --- | --- | --- |
+| `GET` | `/api/employees` | Paginated directory (`search`, `department`, `active`, `sortBy`, `sortOrder`, `page`, `pageSize`) | `200 OK` |
+| `GET` | `/api/employees/summary` | Workforce KPI metrics and department distribution | `200 OK` |
+| `GET` | `/api/employees/departments` | Distinct sorted list of department names | `200 OK` |
+| `GET` | `/api/employees/{id}` | Employee details by ID | `200 OK`, `404 Not Found` |
 | `POST` | `/api/employees` | Create a new employee | `201 Created`, `400 Bad Request`, `409 Conflict` |
 | `PUT` | `/api/employees/{id}` | Update an existing employee | `200 OK`, `400 Bad Request`, `404 Not Found`, `409 Conflict` |
-| `PATCH` | `/api/employees/{id}/status` | Toggle active / inactive status | `200 OK`, `404 Not Found` |
-| `DELETE` | `/api/employees/{id}` | Delete employee by ID | `204 No Content`, `404 Not Found` |
+| `PATCH` | `/api/employees/{id}/status` | Toggle employee active/inactive status | `200 OK`, `404 Not Found` |
+| `DELETE` | `/api/employees/{id}` | Permanently delete an employee | `204 No Content`, `404 Not Found` |
 
-### Query Parameters for `GET /api/employees`
+Interactive Swagger/OpenAPI documentation is available locally at `/swagger` when running in Development mode.
 
-- `search` (string): Text filter matching first name, last name, email, or position.
-- `department` (string): Filter by specific department.
-- `active` (boolean): Filter by active status (`true` or `false`).
-- `sortBy` (string): Field to sort by (`name`, `department`, `position`, `salary`, `hiredate`, `createdat`).
-- `sortOrder` (string): Sort direction (`asc` or `desc`).
-- `page` (integer): Page index (default: `1`).
-- `pageSize` (integer): Records per page (default: `10`, max: `100`).
-
----
-
-## Running Locally
+## Run Locally
 
 ### Prerequisites
 
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or higher
-- [Node.js](https://nodejs.org/) (v22 LTS recommended) & npm
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Node.js 22 LTS](https://nodejs.org/) and npm
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/EmployeeManagementPlatform.git
-cd EmployeeManagementPlatform
-```
-
-### 2. Start the Backend API
+### 1. Start the Backend API
 
 ```bash
-cd EmployeeManagementPlatform.Api
-dotnet run --launch-profile http
+dotnet restore
+dotnet run --project EmployeeManagementPlatform.Api --launch-profile http
 ```
 
-- API will start at: `http://localhost:5233`
-- Swagger UI available at: `http://localhost:5233/swagger`
-- The SQLite database is automatically generated and seeded on initial run.
+- **API**: `http://localhost:5233`
+- **Swagger UI**: `http://localhost:5233/swagger`
 
-### 3. Start the Frontend Application
+The SQLite database (`employees.db`) is automatically created, migrated, and seeded on first run.
 
-In a separate terminal:
+### 2. Start the Frontend
 
 ```bash
 cd frontend
@@ -168,140 +130,76 @@ npm install
 npm run dev
 ```
 
-- Frontend application will be available at: `http://localhost:5173`
-- API calls to `/api` are automatically proxied to the backend.
+- **Frontend**: `http://localhost:5173` (requests to `/api` are proxied to `http://localhost:5233` via Vite).
 
----
+## Testing
 
-## Tests
+Automated backend and frontend test suites validate service queries, domain validation rules, and UI component workflows.
 
-The project includes automated tests for both the backend and the frontend.
-
-### Running Backend Tests (xUnit)
+### Backend Tests (xUnit — 23 passing tests)
 
 ```bash
 dotnet test
 ```
 
-- **23 unit tests** covering:
-  - `EmployeeService`: CRUD operations, search filtering, department filtering, status filtering, sorting, pagination, and KPI metrics.
-  - `EmployeeValidators`: First/last name constraints, name equality rules, email format verification, non-negative salary constraints, and hire date validation.
+Covers `EmployeeService` (CRUD, search, department/status filtering, sorting, pagination, KPI summary, duplicate email rejection) and `EmployeeValidators` (field constraints, identical first/last name prevention, salary bounds, and hire date rules).
 
-### Running Frontend Tests (Vitest)
+### Frontend Tests (Vitest — 13 passing tests)
 
 ```bash
 cd frontend
-npm run test
+npm test
 ```
 
-- **13 component tests** covering:
-  - `EmployeeForm`: Validation rules, required field errors, identical name prevention, valid submissions.
-  - `Pagination`: Range calculations, disabled button states, page change triggers.
-  - `SearchInput`: Debounce typing execution, clear button behavior.
-  - `StatusBadge`: Correct styling and status rendering.
+Covers `EmployeeForm`, `Pagination`, `SearchInput`, and `StatusBadge` using Vitest and React Testing Library.
 
----
+## Continuous Integration
+
+[![CI](https://github.com/led-21/EmployeeManagementPlatform/actions/workflows/ci.yml/badge.svg)](https://github.com/led-21/EmployeeManagementPlatform/actions/workflows/ci.yml)
+
+The GitHub Actions workflow (`.github/workflows/ci.yml`) runs two parallel jobs on pushes and pull requests:
+
+- **Backend (.NET 8)**: `dotnet restore`, `dotnet build --configuration Release`, and `dotnet test`.
+- **Frontend (React / Vite)**: `npm ci`, `npm run build` (`tsc && vite build`), and `npm run test`.
 
 ## Project Structure
 
 ```text
 EmployeeManagementPlatform/
-├── .github/
-│   └── workflows/
-│       └── ci.yml                          # GitHub Actions CI workflow
-├── .nvmrc                                  # Node.js LTS version specification
-├── LICENSE                                 # MIT License
-├── README.md                               # Project documentation
-├── EmployeeManagementPlatform.sln          # .NET Solution file
-├── EmployeeManagementPlatform.Api/         # Backend ASP.NET Core 8 Web API
-│   ├── Data/
-│   │   └── AppDbContext.cs                 # EF Core DbContext & synthetic seed
-│   ├── DTOs/
-│   │   └── EmployeeDTOs.cs                 # Request, response, and pagination records
-│   ├── Endpoints/
-│   │   └── EmployeeEndpoints.cs            # REST Minimal API endpoint mappings
-│   ├── Interfaces/
-│   │   └── IEmployeeService.cs             # Application service interface
-│   ├── Migrations/                         # EF Core database migrations
-│   ├── Models/
-│   │   └── Employee.cs                     # Core domain entity
-│   ├── Properties/
-│   │   └── launchSettings.json             # Execution profiles
-│   ├── Services/
-│   │   └── EmployeeService.cs              # Business logic & query execution
-│   ├── Validators/
-│   │   └── EmployeeValidators.cs           # FluentValidation rules
-│   ├── Program.cs                          # Application entry point, DI & middleware
-│   └── appsettings.json                    # Configuration & connection strings
-│
-├── EmployeeManagementPlatform.Tests/       # Backend Automated Tests (xUnit)
-│   ├── Helper/
-│   │   └── MockDb.cs                       # In-memory DbContext factory
-│   ├── EmployeeServiceTests.cs             # Service layer unit tests
-│   └── EmployeeValidationTests.cs          # Validation unit tests
-│
-└── frontend/                               # Frontend (React + TypeScript + Vite)
-    ├── .nvmrc                              # Node version specification
-    ├── public/                             # Static assets
+├── .github/workflows/
+│   └── ci.yml                              # GitHub Actions CI pipeline
+├── docs/images/                            # Application screenshots
+├── EmployeeManagementPlatform.Api/         # ASP.NET Core 8 Minimal API
+│   ├── Data/                               # AppDbContext & synthetic seed data
+│   ├── DTOs/                               # Request/response records & PagedResult
+│   ├── Endpoints/                          # /api/employees route definitions
+│   ├── Interfaces/                         # IEmployeeService contract
+│   ├── Migrations/                         # EF Core SQLite migrations
+│   ├── Models/                             # Employee entity
+│   ├── Services/                           # EmployeeService query & CRUD logic
+│   ├── Validators/                         # FluentValidation validators
+│   └── Program.cs                          # DI, middleware, CORS & auto-migration
+├── EmployeeManagementPlatform.Tests/       # xUnit backend test suite
+│   ├── Helper/                             # In-memory DbContext test helper
+│   ├── EmployeeServiceTests.cs             # Service unit tests
+│   └── EmployeeValidationTests.cs          # Validator unit tests
+└── frontend/                               # React 19 + TypeScript + Vite SPA
     ├── src/
-    │   ├── components/                     # Reusable UI components
-    │   │   ├── ConfirmModal.tsx            # Confirmation modal
-    │   │   ├── EmployeeDetailsModal.tsx    # Employee inspection modal
-    │   │   ├── EmployeeForm.tsx            # Form with client/server validation
-    │   │   ├── EmployeeFormModal.tsx       # Form modal wrapper
-    │   │   ├── EmployeeTable.tsx           # Sortable data table
-    │   │   ├── Header.tsx                  # App header with branding
-    │   │   ├── Pagination.tsx              # Page navigation controls
-    │   │   ├── SearchInput.tsx             # Debounced search bar
-    │   │   ├── StatusBadge.tsx             # Active/Inactive pill badge
-    │   │   ├── SummaryCards.tsx            # KPI metric cards
-    │   │   └── Toast.tsx                   # Toast notification system
-    │   ├── services/                       # API integration layer
-    │   │   ├── api.ts                      # Fetch wrapper with ProblemDetails handling
-    │   │   └── employees.ts                # Employee API client methods
-    │   ├── test/                           # Frontend component tests (Vitest)
-    │   │   ├── EmployeeForm.test.tsx
-    │   │   ├── Pagination.test.tsx
-    │   │   ├── SearchInput.test.tsx
-    │   │   ├── StatusBadge.test.tsx
-    │   │   └── setup.ts                    # Jest-DOM matchers setup
-    │   ├── types/
-    │   │   └── employee.ts                 # TypeScript type definitions & DTOs
-    │   ├── App.tsx                         # Main container & state management
-    │   ├── index.css                       # Modern CSS design system
-    │   └── main.tsx                        # React application entry point
-    ├── package.json                        # Dependencies & scripts
-    ├── tsconfig.json                       # TypeScript compiler configuration
-    └── vite.config.ts                      # Vite build & proxy configuration
+    │   ├── components/                     # Dashboard, table, modals & form UI
+    │   ├── services/                       # Typed API client & ProblemDetails error handling
+    │   ├── test/                           # Vitest + Testing Library suites
+    │   ├── types/                          # Shared TypeScript interfaces
+    │   └── App.tsx                         # Main application view & state coordination
+    └── vite.config.ts                      # Vite dev server, API proxy & Vitest config
 ```
-
----
-
-## Screenshots
-
-*Visual previews of the application interface:*
-
-| Main Workforce Directory | Employee Creation / Edit Modal |
-|:---:|:---:|
-| KPI metrics, search, department filters, and sortable table | Live validated form with corporate email & salary checks |
-
-| Employee Details View | Interactive Swagger Documentation |
-|:---:|:---:|
-| Modal displaying compensation and company tenure | OpenAPI interactive test interface |
-
----
 
 ## Roadmap
 
-Future enhancement possibilities:
-- [ ] Role-based access control (RBAC) with JWT authentication.
-- [ ] Export employee directory to CSV / Excel.
-- [ ] Department budget utilization indicators.
-- [ ] Dark mode theme support.
-- [ ] Docker compose setup for containerized deployment.
-
----
+- Authentication and role-based access control (RBAC)
+- Containerized local development with Docker Compose
+- Directory export to CSV / Excel
+- PostgreSQL database provider profile for production deployments
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Licensed under the [MIT License](LICENSE).
